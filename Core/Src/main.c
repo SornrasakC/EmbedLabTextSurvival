@@ -142,7 +142,7 @@ typedef struct GameDataStruct {
 	struct list * lines[10];
 	int linesLength[10];
 	int speed; /* 1 - 10 default 1 */
-	int numberOfLines; /* 1 - 10 default 2 */
+	int numberOfLines; /* 1 - 10 default 4 */
 	int highScore; /* initial 0 */
 	int gameState;
 	/*
@@ -157,8 +157,6 @@ typedef struct GameDataStruct {
 	char currentScoreString[60];
 } GameData;
 GameData gameData;
-
-struct list * DebugList;
 
 char receive[1] = "-";
 char line[100] = "";
@@ -324,20 +322,11 @@ void setRandSeed() {
 
 char InputHandler() {
 	if(receive[0] == '\r') { // Enter
-		if(strcmp(line, "debug2") == 0) {
-			DrawGrid();
-			MoveCurTo(23, 1);
-			print("\033[1m");
-		}
-		if(strcmp(line, "debug3") == 0) {
-			print(reset);
-			print("blahblag");
-		}
 		strcpy(finishedLine, line);
 		strcpy(line, "");
 		return receive[0];
 	}
-	if(receive[0] == '\e') { // What's dis...
+	if(receive[0] == '\e') { // Prolly Escape
 		return receive[0];
 	}
 	if(receive[0] == '[' || receive[0] == 'A' || receive[0] == 'B' || receive[0] == 'C' || receive[0] == 'D') { // ALL Arrow BANNED / I Gave up.
@@ -393,7 +382,7 @@ void PlayingPageInfo() {
 
 	SetColorBrightRedBG_BlackLetter();
 	for(int i = 0; i < gameData.numberOfLines; i++) {
-		MoveCurTo(i + 5, 64);
+		MoveCurTo(i + 5, 77);
 		print("XX");
 	}
 	SetColorResetWithBold();
@@ -439,7 +428,7 @@ void PlayingPageTimerCallback() {
 	if(gameData.gameState != 1) return;
 	for(int i = 0; i < gameData.numberOfLines; i++) {
 		gameData.linesLength[i] += 1;
-		if(gameData.linesLength[i] > 61){
+		if(gameData.linesLength[i] > 74){
 			gameData.gameState = 11; // DEAD
 			DeadPageInit();
 			return;
@@ -654,13 +643,13 @@ void SetFontBold() {
 void DrawGrid() {
 	MoveCurTo(1, 1);
 	SetColorBrightCyanAll();
-	print("1234567890123456789012345678901234567890123456789012345678901234567\r\n"); // 67
-	for(int i = 2; i < 23; i++) {
+	print("12345678901234567890123456789012345678901234567890123456789012345678901234567890\r\n"); // 80
+	for(int i = 2; i < 25; i++) {
 		char toPrint[20];
-		sprintf(toPrint, "OO\033[%d;66HOO\r\n", i);
+		sprintf(toPrint, "OO\033[%d;79HOO\r\n", i);
 		print(toPrint);
 	}
-	print("1234567890123456789012345678901234567890123456789012345678901234567"); // 67
+	print("12345678901234567890123456789012345678901234567890123456789012345678901234567890"); // 80
 	MoveCurTo(2, 3);
 	SetColorResetWithBold();
 }
@@ -668,7 +657,7 @@ void DrawGrid() {
 void PrintCentered(const void * s, int row, int len) {
 	if(len == -1)
 		len = strlen(s);
-	int col = 34 - (len / 2);
+	int col = 40 - (len / 2);
 	MoveCurTo(row, col);
 	print(s);
 }

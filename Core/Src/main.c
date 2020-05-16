@@ -186,14 +186,15 @@ void init() {
 	SetFontBold();
 	WelcomePagePrompt();
 	gameData.gameState = 0;
-	gameData.speed = 1;
-	gameData.numberOfLines = 4;
+	gameData.speed = 7;
+	gameData.numberOfLines = 1;
 	gameData.highScore = 0;
 	gameData.currentScore = 0;
 	for(int i = 0; i < 10; i++) {
 		gameData.linesLength[i] = 0;
 		gameData.lines[i] = listInit();
 	}
+	ChangeTimerPeriod();
 }
 
 void driver() {
@@ -242,8 +243,6 @@ void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart) {
 
 void print(const void * s) {
 	s = (char * ) s;
-//	HAL_UART_Transmit(&huart2, (unsigned char *) s, strlen(s), HAL_MAX_DELAY);
-//	return;
 	if(strlen(s) == 0) return;
 	strcpy(txQueue[endTxQueueIndex], s);
 	endTxQueueIndex++;
